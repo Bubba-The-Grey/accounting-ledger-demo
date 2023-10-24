@@ -7,12 +7,13 @@ import java.time.format.*;
 public class AccountingLedger {
 
     // Creating a HashMap of Transactions as well as a universal formats
-    public static HashMap<Integer, Transaction> transactions = new HashMap<>();
+    public static HashMap<LocalDateTime, Transaction> transactions = new HashMap<>();
     public static int count = 0;
     public static Scanner scan = new Scanner(System.in);
     public static DecimalFormat df = new DecimalFormat("0.00");
     public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
-    public static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("H:mm");
+    public static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("M/d/yyyy HH:mm:ss");
 
 
     // Load Ledger Method
@@ -20,22 +21,23 @@ public class AccountingLedger {
         BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"));
         String input = "";
         String[] inputs;
-        LocalDate date;
-        LocalTime time;
+        String date;
+        String time;
         String vendor, description;
         double amount;
+        String dateTime;
         char DP;
         while((input = reader.readLine()) != null){
             inputs  = input.split("\\|");
             if(!inputs[0].equalsIgnoreCase("date")){
-                date = LocalDate.parse(inputs[0]);
-                time = LocalTime.parse(inputs[1]);
+                date = dateFormatter.format(LocalDate.parse(inputs[0]));
+                time = inputs[1];
+                dateTime = date + " " + time;
                 description = inputs[2];
                 vendor = inputs[3];
                 amount = Double.parseDouble(inputs[4]);
                 DP = inputs[5].charAt(0);
-                transactions.put(count, new Transaction(date, time, description, vendor, amount, DP));
-                count++;
+                transactions.put(LocalDateTime.parse(dateTime, dateTimeFormatter), new Transaction(LocalDate.parse(date, dateFormatter), LocalTime.parse(time, timeFormatter), description, vendor, amount, DP));
             }
         }
         reader.close();
@@ -92,11 +94,12 @@ public class AccountingLedger {
         if(date.equalsIgnoreCase("")){
             date = dateFormatter.format(LocalDate.now());
         }
-        System.out.println("Enter the time of deposit (use format HH:MM or leave blank for system time): ");
+        System.out.println("Enter the time of deposit (use format HH:MM:SS or leave blank for system time): ");
         String time = scan.nextLine();
         if(time.equalsIgnoreCase("")){
             time = timeFormatter.format(LocalTime.now());
         }
+        String dateTime = date + " " + time;
         System.out.println("Enter the description of the deposit: ");
         String description = scan.nextLine();
         System.out.println("Enter the vendor of the deposit: ");
@@ -123,18 +126,24 @@ public class AccountingLedger {
                 }
             }
         }
-        transactions.put(count, new Transaction(LocalDate.parse(date, dateFormatter), LocalTime.parse(time, timeFormatter), description, vendor, amount, 'D'));
+        transactions.put(LocalDateTime.parse(dateTime, dateTimeFormatter), new Transaction(LocalDate.parse(date, dateFormatter), LocalTime.parse(time, timeFormatter), description, vendor, amount, 'D'));
         BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv", true));
         writer.newLine();
-        writer.write(transactions.get(count).toString());
+        writer.write(transactions.get(LocalDateTime.parse(dateTime, dateTimeFormatter)).toString());
         writer.close();
-        count++;
     }
     public static void addPayment() throws IOException{
         System.out.println("Enter the date of payment (use format MM/DD/YYYY or leave blank for system date): ");
         String date = scan.nextLine();
-        System.out.println("Enter the time of payment (use format HH:MM or leave blank for system time): ");
+        if(date.equalsIgnoreCase("")){
+            date = dateFormatter.format(LocalDate.now());
+        }
+        System.out.println("Enter the time of payment (use format HH:MM:SS or leave blank for system time): ");
         String time = scan.nextLine();
+        if(time.equalsIgnoreCase("")){
+            time = timeFormatter.format(LocalTime.now());
+        }
+        String dateTime = date + " " + time;
         System.out.println("Enter the description of the payment: ");
         String description = scan.nextLine();
         System.out.println("Enter the vendor of the payment: ");
@@ -161,17 +170,16 @@ public class AccountingLedger {
                 }
             }
         }
-        transactions.put(count, new Transaction(LocalDate.parse(date, dateFormatter), LocalTime.parse(time, timeFormatter), description, vendor, amount, 'D'));
+        transactions.put(LocalDateTime.parse(dateTime, dateTimeFormatter), new Transaction(LocalDate.parse(date, dateFormatter), LocalTime.parse(time, timeFormatter), description, vendor, amount, 'D'));
         BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv", true));
         writer.newLine();
-        writer.write(transactions.get(count).toString());
+        writer.write(transactions.get(LocalDateTime.parse(dateTime, dateTimeFormatter)).toString());
         writer.close();
-        count++;
     }
 
     public static void viewLedger() throws IOException {
         int input = 0;
-        transactions = SortByDate();
+        transactions = SortByDate(transactions);
         do {
             System.out.println("You are viewing the Ledger. Please choose an option");
             System.out.println("\t1 - View All Entries");
@@ -204,19 +212,19 @@ public class AccountingLedger {
         }while (input != 5);
     }
     public static void viewAllEntries(){
-        for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+        for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
             System.out.println(aa.getValue().toString());
         }
     }
     public static void viewDeposits(){
-        for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+        for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
             if(aa.getValue().getDP() == 'D') {
                 System.out.println(aa.getValue().toString());
             }
         }
     }
     public static void viewPayments(){
-        for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+        for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
             if(aa.getValue().getDP() == 'P') {
                 System.out.println(aa.getValue().toString());
             }
@@ -237,7 +245,7 @@ public class AccountingLedger {
             scan.nextLine();
             switch(input){
                 case 1:
-                    for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+                    for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
                         if(aa.getValue().getDate().getYear() == LocalDate.now().getYear()){
                             if(aa.getValue().getDate().getMonth() == LocalDate.now().getMonth()){
                                 System.out.println(aa.getValue().toString());
@@ -246,7 +254,7 @@ public class AccountingLedger {
                     }
                     break;
                 case 2:
-                    for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+                    for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
                         if(aa.getValue().getDate().getYear() == LocalDate.now().getYear()){
                             if(aa.getValue().getDate().getMonthValue() == (LocalDate.now().getMonthValue() - 1)){
                                 System.out.println(aa.getValue().toString());
@@ -255,14 +263,14 @@ public class AccountingLedger {
                     }
                     break;
                 case 3:
-                    for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+                    for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
                         if(aa.getValue().getDate().getYear() == LocalDate.now().getYear()){
                             System.out.println(aa.getValue().toString());
                         }
                     }
                     break;
                 case 4:
-                    for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+                    for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
                         if(aa.getValue().getDate().getYear() == (LocalDate.now().getYear() - 1)){
                             System.out.println(aa.getValue().toString());
                         }
@@ -279,16 +287,16 @@ public class AccountingLedger {
             }
         }while (input != 6);
     }
-    public static HashMap<Integer, Transaction> SortByDate(){
-        List<Map.Entry<Integer, Transaction>> list = new LinkedList<>(transactions.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<Integer, Transaction>>() {
-            @Override
-            public int compare(Map.Entry<Integer, Transaction> o1, Map.Entry<Integer, Transaction> o2) {
-                return (o1.getValue().getDate().compareTo(o2.getValue().getDate()));
+    public static HashMap<LocalDateTime, Transaction> SortByDate(HashMap<LocalDateTime, Transaction> transactions){
+        List<Map.Entry<LocalDateTime, Transaction>> list = new LinkedList<>(transactions.entrySet());
+        Collections.sort(list, new Comparator<>() {
+            public int compare(Map.Entry<LocalDateTime, Transaction> o1,
+                               Map.Entry<LocalDateTime, Transaction> o2) {
+                return o2.getKey().compareTo(o1.getKey());
             }
         });
-        HashMap<Integer, Transaction> temp = new HashMap<>();
-        for(Map.Entry<Integer, Transaction> aa : list){
+        HashMap<LocalDateTime, Transaction> temp = new LinkedHashMap<LocalDateTime, Transaction>();
+        for(Map.Entry<LocalDateTime, Transaction> aa : list){
             temp.put(aa.getKey(), aa.getValue());
         }
         return temp;
@@ -297,7 +305,7 @@ public class AccountingLedger {
         System.out.println("Who are you searching for?");
         System.out.print("Vendor: ");
         String vendor = scan.nextLine();
-        for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+        for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
             if(aa.getValue().getVendor().equalsIgnoreCase(vendor)){
                 System.out.println(aa.getValue().toString());
             }

@@ -1,9 +1,11 @@
 date|time|description|vendor|amount|DP
-2023-10-10|03:17|Initial Deposit|Me|1000.00|D
-2023-10-11|10:23|Initial Deposit|You|-1000.00|P
-2022-03-15|10:18|Payday|Bossman|1000.00|D
-2023-04-15|04:50|Tacos|Taco Bell|-45.99|P
-2010-10-10|10:10|Tens|Tenz|1010.10|D
-2010-10-10|10:11|No tens|Not Tenz|-1010.09|D
-2023-09-17|10:11|Gambling|Local Casino|-1000.00|P
-2023-10-24|13:28|Test of Time|Zilean|1234.56|D
+2023-10-10|03:17:00|Initial Deposit|Me|1000.00|D
+2023-10-11|10:23:12|Initial Deposit|You|-1000.00|P
+2022-03-15|10:18:44|Payday|Bossman|1000.00|D
+2023-04-15|04:50:12|Tacos|Taco Bell|-45.99|P
+2010-10-10|10:10:45|Tens|Tenz|1010.10|D
+2010-10-10|10:11:25|No tens|Not Tenz|-1010.09|D
+2023-09-17|10:11:36|Gambling|Local Casino|-1000.00|P
+2023-10-24|13:28:07|Test of Time|Zilean|1234.56|D
+2023-10-24|15:13:35|Test of Time with Sort|Zilean|4321.09|D
+2023-10-24|15:13:56|Test of Time with Sort 2|Zilean|-4321.09|D
