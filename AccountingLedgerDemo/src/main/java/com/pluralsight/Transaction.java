@@ -1,4 +1,5 @@
 package com.pluralsight;
+import java.text.DecimalFormat;
 import java.time.*;
 public class Transaction {
 
@@ -8,7 +9,7 @@ public class Transaction {
     private String vendor, description;
     private double amount;
     private char DP;
-
+    public static DecimalFormat df = new DecimalFormat("0.00");
 
 
 
@@ -76,6 +77,6 @@ public class Transaction {
     // Custom toString() method
     @Override
     public String toString() {
-        return this.date + "|" + this.time + "|" + this.description + "|" + this.vendor + "|" + this.amount + "|" + this.DP;
+        return this.date + "|" + this.time + "|" + this.description + "|" + this.vendor + "|" + df.format(this.amount) + "|" + this.DP;
     }
 }

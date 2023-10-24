@@ -89,8 +89,14 @@ public class AccountingLedger {
     public static void addDeposit() throws  IOException{
         System.out.println("Enter the date of deposit (use format MM/DD/YYYY or leave blank for system date): ");
         String date = scan.nextLine();
+        if(date.equalsIgnoreCase("")){
+            date = dateFormatter.format(LocalDate.now());
+        }
         System.out.println("Enter the time of deposit (use format HH:MM or leave blank for system time): ");
         String time = scan.nextLine();
+        if(time.equalsIgnoreCase("")){
+            time = timeFormatter.format(LocalTime.now());
+        }
         System.out.println("Enter the description of the deposit: ");
         String description = scan.nextLine();
         System.out.println("Enter the vendor of the deposit: ");
@@ -165,6 +171,7 @@ public class AccountingLedger {
 
     public static void viewLedger() throws IOException {
         int input = 0;
+        transactions = SortByDate();
         do {
             System.out.println("You are viewing the Ledger. Please choose an option");
             System.out.println("\t1 - View All Entries");
@@ -174,6 +181,7 @@ public class AccountingLedger {
             System.out.println("\t5 - Return to Home Screen");
             System.out.print("Your Choice: ");
             input = scan.nextInt();
+            scan.nextLine();
             switch(input){
                 case 1:
                     viewAllEntries();
@@ -226,18 +234,39 @@ public class AccountingLedger {
             System.out.println("\t6 - Return to Ledger");
             System.out.print("Your Choice: ");
             input = scan.nextInt();
+            scan.nextLine();
             switch(input){
                 case 1:
-                    monthToDate();
+                    for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+                        if(aa.getValue().getDate().getYear() == LocalDate.now().getYear()){
+                            if(aa.getValue().getDate().getMonth() == LocalDate.now().getMonth()){
+                                System.out.println(aa.getValue().toString());
+                            }
+                        }
+                    }
                     break;
                 case 2:
-                    previousMonth();
+                    for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+                        if(aa.getValue().getDate().getYear() == LocalDate.now().getYear()){
+                            if(aa.getValue().getDate().getMonthValue() == (LocalDate.now().getMonthValue() - 1)){
+                                System.out.println(aa.getValue().toString());
+                            }
+                        }
+                    }
                     break;
                 case 3:
-                    yearToDate();
+                    for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+                        if(aa.getValue().getDate().getYear() == LocalDate.now().getYear()){
+                            System.out.println(aa.getValue().toString());
+                        }
+                    }
                     break;
                 case 4:
-                    previousYear();
+                    for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+                        if(aa.getValue().getDate().getYear() == (LocalDate.now().getYear() - 1)){
+                            System.out.println(aa.getValue().toString());
+                        }
+                    }
                     break;
                 case 5:
                     searchByVendor();
@@ -250,7 +279,28 @@ public class AccountingLedger {
             }
         }while (input != 6);
     }
-    public static void monthToDate(){
-        
+    public static HashMap<Integer, Transaction> SortByDate(){
+        List<Map.Entry<Integer, Transaction>> list = new LinkedList<>(transactions.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Transaction>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Transaction> o1, Map.Entry<Integer, Transaction> o2) {
+                return (o1.getValue().getDate().compareTo(o2.getValue().getDate()));
+            }
+        });
+        HashMap<Integer, Transaction> temp = new HashMap<>();
+        for(Map.Entry<Integer, Transaction> aa : list){
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
+    }
+    public static void searchByVendor(){
+        System.out.println("Who are you searching for?");
+        System.out.print("Vendor: ");
+        String vendor = scan.nextLine();
+        for(Map.Entry<Integer, Transaction> aa : transactions.entrySet()){
+            if(aa.getValue().getVendor().equalsIgnoreCase(vendor)){
+                System.out.println(aa.getValue().toString());
+            }
+        }
     }
 }
