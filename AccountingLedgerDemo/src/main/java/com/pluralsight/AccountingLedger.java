@@ -8,7 +8,6 @@ public class AccountingLedger {
 
     // Creating a HashMap of Transactions as well as a universal formats
     public static HashMap<LocalDateTime, Transaction> transactions = new HashMap<>();
-    public static int count = 0;
     public static Scanner scan = new Scanner(System.in);
     public static DecimalFormat df = new DecimalFormat("0.00");
     public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
@@ -19,7 +18,7 @@ public class AccountingLedger {
     // Load Ledger Method
     public static void loadTransactions() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"));
-        String input = "";
+        String input;
         String[] inputs;
         String date;
         String time;
@@ -53,7 +52,7 @@ public class AccountingLedger {
         System.out.println("Welcome to the Ledger!");
 
         // User Options for Home Screen
-        int input = 0;
+        int input;
         do{
             System.out.println("What would you like to do?");
             System.out.println("\t1 - Add a Deposit");
@@ -107,10 +106,7 @@ public class AccountingLedger {
         System.out.println("Enter the amount deposited: $");
         double amount = Double.parseDouble(df.format(scan.nextDouble()));
         scan.nextLine();
-        boolean sure = false;
-        if(amount > 0){
-            sure = true;
-        }
+        boolean sure = amount > 0;
         while (!sure){
             System.out.print("Are you sure you want to enter a negative value? Deposits are usually positive (Y/N): ");
             String positive = scan.nextLine().substring(0, 1).toUpperCase();
@@ -151,10 +147,7 @@ public class AccountingLedger {
         System.out.println("Enter the amount payment: $");
         double amount = Double.parseDouble(df.format(scan.nextDouble()));
         scan.nextLine();
-        boolean sure = false;
-        if(amount < 0){
-            sure = true;
-        }
+        boolean sure = amount < 0;
         while (!sure){
             System.out.print("Are you sure you want to enter a positive value? Payments are usually negative (Y/N): ");
             String positive = scan.nextLine().trim().substring(0, 1).toUpperCase();
@@ -170,15 +163,15 @@ public class AccountingLedger {
                 }
             }
         }
-        transactions.put(LocalDateTime.parse(dateTime, dateTimeFormatter), new Transaction(LocalDate.parse(date, dateFormatter), LocalTime.parse(time, timeFormatter), description, vendor, amount, 'D'));
+        transactions.put(LocalDateTime.parse(dateTime, dateTimeFormatter), new Transaction(LocalDate.parse(date, dateFormatter), LocalTime.parse(time, timeFormatter), description, vendor, amount, 'P'));
         BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv", true));
         writer.newLine();
         writer.write(transactions.get(LocalDateTime.parse(dateTime, dateTimeFormatter)).toString());
         writer.close();
     }
 
-    public static void viewLedger() throws IOException {
-        int input = 0;
+    public static void viewLedger() {
+        int input;
         transactions = SortByDate(transactions);
         do {
             System.out.println("You are viewing the Ledger. Please choose an option");
@@ -231,7 +224,7 @@ public class AccountingLedger {
         }
     }
     public static void Reports(){
-        int input = 0;
+        int input;
         do{
             System.out.println("You are viewing the Pre-defined Reports. Please choose an option");
             System.out.println("\t1 - Month-to-Date");
@@ -289,13 +282,8 @@ public class AccountingLedger {
     }
     public static HashMap<LocalDateTime, Transaction> SortByDate(HashMap<LocalDateTime, Transaction> transactions){
         List<Map.Entry<LocalDateTime, Transaction>> list = new LinkedList<>(transactions.entrySet());
-        Collections.sort(list, new Comparator<>() {
-            public int compare(Map.Entry<LocalDateTime, Transaction> o1,
-                               Map.Entry<LocalDateTime, Transaction> o2) {
-                return o2.getKey().compareTo(o1.getKey());
-            }
-        });
-        HashMap<LocalDateTime, Transaction> temp = new LinkedHashMap<LocalDateTime, Transaction>();
+        list.sort((o1, o2) -> o2.getKey().compareTo(o1.getKey()));
+        HashMap<LocalDateTime, Transaction> temp = new LinkedHashMap<>();
         for(Map.Entry<LocalDateTime, Transaction> aa : list){
             temp.put(aa.getKey(), aa.getValue());
         }
