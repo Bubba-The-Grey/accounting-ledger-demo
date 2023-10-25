@@ -96,14 +96,14 @@ public class AccountingLedger {
     public static void addDeposit() throws  IOException{
 
         // Asks for Date of deposit, uses System Date if no date is entered
-        System.out.println("Enter the date of deposit (use format MM/DD/YYYY or leave blank for system date): ");
+        System.out.print("Enter the date of deposit (use format MM/DD/YYYY or leave blank for system date): ");
         String date = scan.nextLine();
         if(date.equalsIgnoreCase("")){
             date = dateFormatter.format(LocalDate.now());
         }
 
         // Asks for Time of deposit, uses System Time if no time is entered
-        System.out.println("Enter the time of deposit (use format HH:MM:SS or leave blank for system time): ");
+        System.out.print("Enter the time of deposit (use format HH:MM:SS or leave blank for system time): ");
         String time = scan.nextLine();
         if(time.equalsIgnoreCase("")){
             time = timeFormatter.format(LocalTime.now());
@@ -113,15 +113,15 @@ public class AccountingLedger {
         String dateTime = date + " " + time;
 
         // Asks for Description of deposit
-        System.out.println("Enter the description of the deposit: ");
+        System.out.print("Enter the description of the deposit: ");
         String description = scan.nextLine();
 
         // Asks who the Vendor of the deposit is
-        System.out.println("Enter the vendor of the deposit: ");
+        System.out.print("Enter the vendor of the deposit: ");
         String vendor = scan.nextLine();
 
         // Asks the amount of money is deposited
-        System.out.println("Enter the amount deposited: $");
+        System.out.print("Enter the amount deposited: $");
         double amount = Double.parseDouble(df.format(scan.nextDouble()));
         scan.nextLine();
 
@@ -134,7 +134,7 @@ public class AccountingLedger {
                 sure = true;
             }
             else{
-                System.out.println("Enter the amount deposited: $");
+                System.out.print("Enter the amount deposited: $");
                 amount = Double.parseDouble(df.format(scan.nextDouble()));
                 scan.nextLine();
                 if(amount > 0){
@@ -157,14 +157,14 @@ public class AccountingLedger {
     public static void addPayment() throws IOException{
 
         // Asks for Date of payment, uses System Date if no date is entered
-        System.out.println("Enter the date of payment (use format MM/DD/YYYY or leave blank for system date): ");
+        System.out.print("Enter the date of payment (use format MM/DD/YYYY or leave blank for system date): ");
         String date = scan.nextLine();
         if(date.equalsIgnoreCase("")){
             date = dateFormatter.format(LocalDate.now());
         }
 
         // Asks for Time of payment, uses System Time if no time is entered
-        System.out.println("Enter the time of payment (use format HH:MM:SS or leave blank for system time): ");
+        System.out.print("Enter the time of payment (use format HH:MM:SS or leave blank for system time): ");
         String time = scan.nextLine();
         if(time.equalsIgnoreCase("")){
             time = timeFormatter.format(LocalTime.now());
@@ -174,15 +174,15 @@ public class AccountingLedger {
         String dateTime = date + " " + time;
 
         // Asks for Description of payment
-        System.out.println("Enter the description of the payment: ");
+        System.out.print("Enter the description of the payment: ");
         String description = scan.nextLine();
 
         // Asks who the Vendor of the payment is
-        System.out.println("Enter the vendor of the payment: ");
+        System.out.print("Enter the vendor of the payment: ");
         String vendor = scan.nextLine();
 
         // Asks the amount of money is paid
-        System.out.println("Enter the amount payment: $");
+        System.out.print("Enter the amount payment: $");
         double amount = Double.parseDouble(df.format(scan.nextDouble()));
         scan.nextLine();
 
@@ -195,7 +195,7 @@ public class AccountingLedger {
                 sure = true;
             }
             else{
-                System.out.println("Enter the amount paid: $");
+                System.out.print("Enter the amount paid: $");
                 amount = Double.parseDouble(df.format(scan.nextDouble()));
                 scan.nextLine();
                 if(amount < 0){
