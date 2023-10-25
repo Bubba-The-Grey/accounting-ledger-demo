@@ -179,7 +179,8 @@ public class AccountingLedger {
             System.out.println("\t2 - View Deposits");
             System.out.println("\t3 - View Payments(Debits)");
             System.out.println("\t4 - Pre-Defined Reports");
-            System.out.println("\t5 - Return to Home Screen");
+            System.out.println("\t5 - Custom Search");
+            System.out.println("\t6 - Return to Home Screen");
             System.out.print("Your Choice: ");
             input = scan.nextInt();
             scan.nextLine();
@@ -197,12 +198,14 @@ public class AccountingLedger {
                     Reports();
                     break;
                 case 5:
+                    CustomSearch();
+                case 6:
                     System.out.println("Returning to Home Screen...");
                     break;
                 default:
-                    System.out.println("ERROR: Invalid Input (please enter 1, 2, 3, 4, or 5)");
+                    System.out.println("ERROR: Invalid Input (please enter 1, 2, 3, 4, 5, or 6)");
             }
-        }while (input != 5);
+        }while (input != 6);
     }
     public static void viewAllEntries(){
         for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
@@ -253,6 +256,11 @@ public class AccountingLedger {
                                 System.out.println(aa.getValue().toString());
                             }
                         }
+                        else if (LocalDate.now().getMonthValue() == 1){
+                            if(aa.getValue().getDate().getMonthValue() == 12 && aa.getValue().getDate().getYear() == (LocalDate.now().getYear() - 1)){
+                                System.out.println(aa.getValue().toString());
+                            }
+                        }
                     }
                     break;
                 case 3:
@@ -297,6 +305,106 @@ public class AccountingLedger {
             if(aa.getValue().getVendor().equalsIgnoreCase(vendor)){
                 System.out.println(aa.getValue().toString());
             }
+        }
+    }
+    public static void CustomSearch(){
+        String startDate, endDate, description, vendor, amount, stringAgain;
+        LocalDate beginning, end;
+        boolean again = true;
+        HashMap<LocalDateTime, Transaction> temp1 = new HashMap<>();
+        HashMap<LocalDateTime, Transaction> temp2 = new HashMap<>();
+        while(again){
+            System.out.print("Enter the start date (MM/DD/YYYY) of the search (Leave blank for search to begin from the earliest date in the ledger): ");
+            startDate = scan.nextLine();
+            if (startDate.equalsIgnoreCase("")){
+                beginning = LocalDate.MIN;
+            }
+            else{
+                beginning = LocalDate.parse(startDate, dateFormatter);
+            }
+            System.out.print("Enter the end date (MM/DD/YYYY) of the search (Leave blank for search to the last date in the ledger): ");
+            endDate = scan.nextLine();
+            if (endDate.equalsIgnoreCase("")){
+                end = LocalDate.MAX;
+            }
+            else{
+                end = LocalDate.parse(endDate, dateFormatter);
+            }
+            for(Map.Entry<LocalDateTime, Transaction> aa : transactions.entrySet()){
+                if (aa.getValue().getDate().compareTo(beginning) >= 0 && aa.getValue().getDate().compareTo(end) <= 0){
+                    temp1.put(aa.getKey(), aa.getValue());
+                }
+            }
+            System.out.print("Enter the description of the search (Leave blank to show all relevant descriptions): ");
+            description = scan.nextLine();
+            System.out.print("Enter the vendor of the search (Leave blank to show all relevant vendors): ");
+            vendor = scan.nextLine();
+            System.out.print("Enter the transaction amount of the search (Leave blank to show all relevant transaction amounts): $");
+            amount = scan.nextLine();
+            if(description.isEmpty() && vendor.isEmpty() && amount.isEmpty()){
+                for(Map.Entry<LocalDateTime, Transaction> aa : temp1.entrySet()){
+                    temp2.put(aa.getKey(), aa.getValue());
+                }
+            }
+            else if(!description.isEmpty() && vendor.isEmpty() && amount.isEmpty()){
+                for(Map.Entry<LocalDateTime, Transaction> aa : temp1.entrySet()){
+                    if(aa.getValue().getDescription().equalsIgnoreCase(description)) {
+                        temp2.put(aa.getKey(), aa.getValue());
+                    }
+                }
+            }
+            else if(!description.isEmpty() && !vendor.isEmpty() && amount.isEmpty()){
+                for(Map.Entry<LocalDateTime, Transaction> aa : temp1.entrySet()){
+                    if(aa.getValue().getDescription().equalsIgnoreCase(description) && aa.getValue().getVendor().equalsIgnoreCase(vendor)) {
+                        temp2.put(aa.getKey(), aa.getValue());
+                    }
+                }
+            }
+            else if(!description.isEmpty() && vendor.isEmpty() && !amount.isEmpty()){
+                for(Map.Entry<LocalDateTime, Transaction> aa : temp1.entrySet()){
+                    if(aa.getValue().getDescription().equalsIgnoreCase(description) && aa.getValue().getAmount() == Double.parseDouble(amount)) {
+                        temp2.put(aa.getKey(), aa.getValue());
+                    }
+                }
+            }
+            else if(description.isEmpty() && !vendor.isEmpty() && amount.isEmpty()){
+                for(Map.Entry<LocalDateTime, Transaction> aa : temp1.entrySet()){
+                    if(aa.getValue().getVendor().equalsIgnoreCase(vendor)) {
+                        temp2.put(aa.getKey(), aa.getValue());
+                    }
+                }
+            }
+            else if(description.isEmpty() && !vendor.isEmpty() && !amount.isEmpty()){
+                for(Map.Entry<LocalDateTime, Transaction> aa : temp1.entrySet()){
+                    if(aa.getValue().getVendor().equalsIgnoreCase(vendor) && aa.getValue().getAmount() == Double.parseDouble(amount)) {
+                        temp2.put(aa.getKey(), aa.getValue());
+                    }
+                }
+            }
+            else if(description.isEmpty() && vendor.isEmpty() && !amount.isEmpty()){
+                for(Map.Entry<LocalDateTime, Transaction> aa : temp1.entrySet()){
+                    if(aa.getValue().getAmount() == Double.parseDouble(amount)) {
+                        temp2.put(aa.getKey(), aa.getValue());
+                    }
+                }
+            }
+            else if(!description.isEmpty() && !vendor.isEmpty() && !amount.isEmpty()){
+                for(Map.Entry<LocalDateTime, Transaction> aa : temp1.entrySet()){
+                    if(aa.getValue().getDescription().equalsIgnoreCase(description) && aa.getValue().getVendor().equalsIgnoreCase(vendor) && aa.getValue().getAmount() == Double.parseDouble(amount)) {
+                        temp2.put(aa.getKey(), aa.getValue());
+                    }
+                }
+            }
+            temp2 = SortByDate(temp2);
+            for(Map.Entry<LocalDateTime, Transaction> aa : temp2.entrySet()){
+                System.out.println(aa.getValue().toString());
+            }
+            temp1.clear();
+            temp2.clear();
+            System.out.print("Would you like to do another search (Y/N)? ");
+            stringAgain = scan.nextLine();
+            char answer = stringAgain.charAt(0);
+            again = answer == 'y' || answer == 'Y';
         }
     }
 }
