@@ -77,7 +77,10 @@ public class Transaction {
         this.DP = DP;
     }
 
-    // Custom toString() method
+
+
+
+    // Custom toString() method to simplify the output process
     @Override
     public String toString() {
         return this.date + "|" + timeFormatter.format(this.time) + "|" + this.description + "|" + this.vendor + "|" + df.format(this.amount) + "|" + this.DP;
