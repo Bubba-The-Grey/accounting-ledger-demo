@@ -16,6 +16,7 @@ pre-defined reports as well as a function for a custom search report.  Pre-defin
 * Year-to-Date
 * Previous Year
 * Vendor Search
+
 Custom Search includes option for:
 * Start Date
 * End Date
@@ -27,13 +28,19 @@ Custom Search includes option for:
 
 **THESE ARE DEMO IMAGES**
 
-![](C:\Users\Bubba The Grey\Videos\Captures\AccountingLedgerDemo – AccountingLedger.java 10_25_2023 11_36_52 AM.png)
-![](C:\Users\Bubba The Grey\Videos\Captures\AccountingLedgerDemo – AccountingLedger.java 10_25_2023 11_37_44 AM.png)
-![](C:\Users\Bubba The Grey\Videos\Captures\AccountingLedgerDemo – AccountingLedger.java 10_25_2023 11_37_54 AM.png)
-![](C:\Users\Bubba The Grey\Videos\Captures\AccountingLedgerDemo – AccountingLedger.java 10_25_2023 11_38_01 AM.png)
-![](C:\Users\Bubba The Grey\Videos\Captures\AccountingLedgerDemo – AccountingLedger.java 10_25_2023 11_38_16 AM.png)
-![](C:\Users\Bubba The Grey\Videos\Captures\AccountingLedgerDemo – AccountingLedger.java 10_25_2023 11_38_23 AM.png)
-![](C:\Users\Bubba The Grey\Videos\Captures\AccountingLedgerDemo – AccountingLedger.java 10_25_2023 11_39_08 AM.png)
+![AccountingLedgerDemo – AccountingLedger java 10_25_2023 11_36_52 AM](https://github.com/Bubba-The-Grey/accounting-ledger-demo/assets/146876325/6a2e352a-d9f4-47a5-bc90-87d874c1d3ad)
+
+![AccountingLedgerDemo – AccountingLedger java 10_25_2023 11_37_44 AM](https://github.com/Bubba-The-Grey/accounting-ledger-demo/assets/146876325/1d552389-7173-45c9-9266-de2269ce6224)
+
+![AccountingLedgerDemo – AccountingLedger java 10_25_2023 11_37_54 AM](https://github.com/Bubba-The-Grey/accounting-ledger-demo/assets/146876325/1be99425-63dc-41ec-be89-88f8ce7176c5)
+
+![AccountingLedgerDemo – AccountingLedger java 10_25_2023 11_38_01 AM](https://github.com/Bubba-The-Grey/accounting-ledger-demo/assets/146876325/92c8bed8-37b1-4c40-b008-79f8127473b4)
+
+![AccountingLedgerDemo – AccountingLedger java 10_25_2023 11_38_16 AM](https://github.com/Bubba-The-Grey/accounting-ledger-demo/assets/146876325/5169e14a-3551-4e42-b51e-6010e7a23b3a)
+
+![AccountingLedgerDemo – AccountingLedger java 10_25_2023 11_38_23 AM](https://github.com/Bubba-The-Grey/accounting-ledger-demo/assets/146876325/1bc56e38-ca30-4dc9-932a-2df0c728eaa5)
+
+![AccountingLedgerDemo – AccountingLedger java 10_25_2023 11_39_08 AM](https://github.com/Bubba-The-Grey/accounting-ledger-demo/assets/146876325/8b9d6995-6938-4fa3-9e03-e75117ebbdab)
 
 ## Interesting Code
 
